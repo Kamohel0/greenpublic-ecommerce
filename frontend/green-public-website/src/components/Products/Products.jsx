@@ -178,8 +178,7 @@ const Products = ({ searchTerm }) => {
       }
     },
     hover: {
-      y: -10,
-      scale: 1.03,
+      y: -4,
       transition: {
         duration: 0.3,
         ease: "easeOut"
@@ -276,7 +275,7 @@ const Products = ({ searchTerm }) => {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
             >
               {filteredItems.length > 0 ? (
                 filteredItems.map((product) => (
@@ -287,12 +286,12 @@ const Products = ({ searchTerm }) => {
                     whileHover="hover"
                     onHoverStart={() => setHoveredProduct(product.id)}
                     onHoverEnd={() => setHoveredProduct(null)}
-                    className="relative group"
+                    className="relative group h-full"
                   >
-                    <Link to={`/product/${product.id}`}>
-                      <div className="bg-gradient-to-b from-white to-gray-50 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer border border-[#DAB6A2]/20">
+                    <Link to={`/product/${product.id}`} className="block h-full">
+                      <div className="h-full flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer border border-[#DAB6A2]/25">
                         {/* Product Image Container */}
-                        <div className="relative overflow-hidden bg-gradient-to-br from-[#f8f5f2] to-[#f1e9df] p-4 md:p-5 h-64 flex items-center justify-center">
+                        <div className="relative aspect-square overflow-hidden bg-[#f4ece4]">
                           {/* Tags */}
                           <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                             {product.tags.slice(0, 2).map((tag, idx) => (
@@ -312,7 +311,8 @@ const Products = ({ searchTerm }) => {
                               e.stopPropagation();
                               toggleWishlist(product);
                             }}
-                            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+                            aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                            className="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors duration-300"
                           >
                             <Heart 
                               className={`w-5 h-5 transition-colors duration-300 ${
@@ -324,21 +324,18 @@ const Products = ({ searchTerm }) => {
                           </button>
                           
                           {/* Product Image */}
-                          <motion.img
+                          <img
                             src={product.img}
                             alt={product.name}
-                            className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-700"
-                            whileHover={{ scale: 1.15 }}
+                            loading="lazy"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                          
-                          {/* Hover Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </div>
 
                         {/* Product Info */}
-                        <div className="p-6">
+                        <div className="p-5 flex flex-col flex-1">
                           {/* Category */}
-                          <div className="mb-3">
+                          <div className="mb-2">
                             <span className="text-xs font-medium text-[#8B5A2B] uppercase tracking-wider">
                               {product.category}
                             </span>
@@ -346,18 +343,19 @@ const Products = ({ searchTerm }) => {
                           
                           {/* Name */}
                           <h3 
-                            className="font-bold text-xl text-gray-800 mb-3 line-clamp-2 leading-tight"
+                            className="font-bold text-lg text-gray-800 mb-2 line-clamp-2 leading-snug"
                             style={{ fontFamily: "'Playfair Display', serif" }}
                           >
                             {product.name}
                           </h3>
                           
                           {/* Description */}
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-3 min-h-[60px] leading-relaxed">
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
                             {product.description}
                           </p>
                           
-                          {/* Rating */}
+                          {/* Rating (only once there are reviews) */}
+                          {product.reviewCount > 0 && (
                           <div className="flex items-center gap-2 mb-4">
                             <div className="flex items-center gap-1">
                               {[...Array(5)].map((_, i) => (
@@ -372,16 +370,15 @@ const Products = ({ searchTerm }) => {
                               ))}
                             </div>
                             <span className="text-sm text-gray-500">
-                              {product.reviewCount > 0
-                                ? `${product.rating} (${product.reviewCount} review${product.reviewCount !== 1 ? 's' : ''})`
-                                : "No reviews yet"}
+                              {`${product.rating} (${product.reviewCount} review${product.reviewCount !== 1 ? 's' : ''})`}
                             </span>
                           </div>
+                          )}
                           
                           {/* Price & Action */}
-                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                          <div className="mt-auto flex items-center justify-between gap-3 pt-4 border-t border-gray-100">
                             <div>
-                              <span className="text-2xl font-bold text-[#8B5A2B]">
+                              <span className="text-xl font-bold text-[#8B5A2B]">
                                 {product.price}
                               </span>
                               {product.lowStock && (
@@ -393,7 +390,7 @@ const Products = ({ searchTerm }) => {
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
-                              className="bg-gradient-to-r from-[#8B5A2B] to-[#DAB6A2] hover:from-[#9C6B3C] hover:to-[#E9C6B5] text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-xl flex items-center gap-2 group"
+                              className="shrink-0 bg-[#8B5A2B] hover:bg-[#744A22] text-white px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-300 flex items-center gap-2"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();

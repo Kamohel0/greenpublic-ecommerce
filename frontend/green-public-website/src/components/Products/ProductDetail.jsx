@@ -37,7 +37,7 @@ const getProductImageByName = (name) => {
   if (n.includes("balm") || n.includes("lip")) return BalmImg;
   return SeaMossGelImg;
 };
-import { getProductById } from "@/api/productApi";
+import { getProductById, getProducts } from "@/api/productApi";
 import { createReview, getReviewsByProduct } from "@/api/reviewApi";
 
 // Enhanced product data
@@ -100,10 +100,30 @@ export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [catalog, setCatalog] = useState(items);
 
   // All hooks should be grouped here
   const addToCart = useCartStore((state) => state.addToCartLocal || state.addToCart);
   const modifyServerCart = useCartStore((state) => state.modifyServerCart);
+
+  // Real catalogue for "Complete Your Wellness Ritual"; the static list is only a fallback
+  useEffect(() => {
+    let mounted = true;
+    getProducts()
+      .then((data) => {
+        if (!mounted || !Array.isArray(data) || data.length === 0) return;
+        setCatalog(data.map((p) => ({
+          id: String(p.id),
+          name: p.name,
+          desc: p.description || "",
+          price: `R ${p.price}`,
+          category: typeof p.category === "string" ? p.category : p.category?.name || "general",
+          img: getFallbackProductImage(p.id, p.name),
+        })));
+      })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -318,7 +338,10 @@ export default function ProductDetail() {
     return parsed.toLocaleDateString();
   };
 
-  const relatedProducts = items.filter((p) => p.id !== product.id && p.category === product.category);
+  // Same category first, then the rest of the range
+  const relatedProducts = catalog
+    .filter((p) => String(p.id) !== String(product.id))
+    .sort((a, b) => (b.category === product.category) - (a.category === product.category));
 
   return (
     <div className="bg-gradient-to-b from-white to-[#f8f5f2] min-h-screen" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -355,10 +378,10 @@ export default function ProductDetail() {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="bg-gradient-to-br from-[#F6E9E0] to-[#f8f5f2] p-8 md:p-12 rounded-3xl shadow-xl">
+            <div className="relative aspect-square overflow-hidden rounded-3xl shadow-lg bg-[#f4ece4]">
               {/* Premium Badge */}
-              <div className="absolute top-6 left-6 z-10">
-                <span className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#DAB6A2] to-[#8B5A2B] text-white text-sm font-semibold rounded-full shadow-lg">
+              <div className="absolute top-4 left-4 z-10">
+                <span className="inline-flex items-center px-3 py-1.5 bg-white/90 backdrop-blur text-[#8B5A2B] text-xs font-semibold rounded-full shadow-md">
                   <FaTag className="w-3 h-3 mr-2" />
                   Premium Quality
                 </span>
@@ -372,7 +395,7 @@ export default function ProductDetail() {
               <img 
                 src={product.img} 
                 alt={product.name} 
-                className="w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-700" 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
               />
             </div>
             
@@ -854,15 +877,16 @@ export default function ProductDetail() {
               {relatedProducts.slice(0, 3).map((item) => (
                 <motion.div
                   key={item.id}
-                  whileHover={{ y: -8 }}
-                  className="bg-gradient-to-b from-white to-gray-50 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[#DAB6A2]/20"
+                  whileHover={{ y: -4 }}
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-[#DAB6A2]/25"
                 >
-                  <Link to={`/product/${item.id}`} className="block">
-                    <div className="p-8 bg-gradient-to-br from-[#f8f5f2] to-[#f1e9df]">
+                  <Link to={`/product/${item.id}`} className="block group">
+                    <div className="relative aspect-square overflow-hidden bg-[#f4ece4]">
                       <img 
                         src={item.img} 
                         alt={item.name} 
-                        className="w-full h-48 object-contain mx-auto hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                     <div className="p-6">
