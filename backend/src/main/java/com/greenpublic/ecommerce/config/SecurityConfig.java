@@ -5,6 +5,7 @@ import com.greenpublic.ecommerce.service.auth.GoogleOAuth2Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,7 +53,9 @@ public class SecurityConfig {
                 // 1. Changed to call the method defined in THIS class
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/products/**", "/api/reviews/product/**", "/api/webhook/yoco", "/payment/redirect", "/api/chatbot/**", "/api/checkout/guest", "/api/checkout/guest/**").permitAll()
+                        // Catalogue and reviews are public to read; changing them requires a login (and a role, see ProductController)
+                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/reviews/product/**").permitAll()
+                        .requestMatchers("/api/webhook/yoco", "/payment/redirect", "/api/chatbot/**", "/api/checkout/guest", "/api/checkout/guest/**").permitAll()
                         .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )

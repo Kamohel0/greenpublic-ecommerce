@@ -2,6 +2,7 @@ package com.greenpublic.ecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
         response.put("error", error);
         response.put("message", details); // always "details", consistent
         return response;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(buildErrorResponse(HttpStatus.FORBIDDEN, "Forbidden", "You do not have permission to perform this action"));
     }
 
     @ExceptionHandler(RuntimeException.class)

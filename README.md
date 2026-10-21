@@ -65,17 +65,29 @@ docs/                     Environment variable reference and SQL migrations
 
 **Requirements:** Java 25, Node 20+ with [pnpm](https://pnpm.io), MySQL 8.
 
-### Backend
+### 1. Database
+
+```bash
+sudo mysql -e "CREATE DATABASE greenpublic; CREATE USER 'greenpublic'@'localhost' IDENTIFIED BY 'choose-a-password'; GRANT ALL ON greenpublic.* TO 'greenpublic'@'localhost';"
+```
+
+### 2. Backend
 
 ```bash
 cd backend
-cp .env.example .env          # fill in DB, JWT, Yoco (test keys), mail and Google values
-./mvnw spring-boot:run        # http://localhost:8080
+cp .env.example .env          # set DB_PASSWORD and JWT_SECRET (openssl rand -base64 32); placeholders are fine for the rest
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev     # http://localhost:8080
 ```
 
-Generate a JWT secret with `openssl rand -base64 32`. Secrets are only read from environment variables or `backend/.env`. They are never stored in the properties files.
+The `dev` profile creates the database tables on first start. Secrets are only read from environment variables or `backend/.env`. They are never stored in the properties files.
 
-### Frontend
+Once it's running, load the sample products from another terminal:
+
+```bash
+mysql -u greenpublic -p greenpublic < docs/dev-seed.sql
+```
+
+### 3. Frontend
 
 ```bash
 cd frontend/green-public-website
@@ -83,6 +95,16 @@ cp .env.example .env.local
 pnpm install
 pnpm dev                      # http://localhost:5173
 ```
+
+### 4. Admin access
+
+Sign up on the site, then give your account the admin role (use `OWNER` for the owner dashboard):
+
+```bash
+mysql -u greenpublic -p greenpublic -e "UPDATE users SET role='ADMIN' WHERE email='you@example.com';"
+```
+
+Log out and back in to open `/admin`.
 
 ### Tests and lint
 

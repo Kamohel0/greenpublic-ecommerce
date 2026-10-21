@@ -12,6 +12,7 @@ import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(value = "
     return ResponseEntity.ok(products);
 }
 
+@PreAuthorize("hasAnyRole('ADMIN','OWNER')")
 @PostMapping("/create")
     public ResponseEntity<ProductResponse> createProduct(
             @Validated({OnCreate.class, Default.class}) @ModelAttribute ProductRequest dto
@@ -44,6 +46,7 @@ public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(value = "
         return ResponseEntity.ok(productService.mapToDTO(saved));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable Long id,
@@ -54,6 +57,7 @@ public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(value = "
         return ResponseEntity.ok(productService.mapToDTO(updated));
     }
 
+      @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
       @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
