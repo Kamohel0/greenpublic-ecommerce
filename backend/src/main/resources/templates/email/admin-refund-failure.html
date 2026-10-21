@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Refund Failure Alert</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eeeeee;
+      }
+      .header h2 {
+        color: #d9534f; /* Red for failure */
+      }
+      .content {
+        padding: 20px 0;
+        line-height: 1.6;
+        color: #333333;
+      }
+      .highlight {
+        font-weight: bold;
+        color: #d9534f;
+      }
+      .button {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #d9534f;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .footer {
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+        font-size: 12px;
+        color: #777777;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Refund Failure Alert</h2>
+      </div>
+      <div class="content">
+        <p>Hi Admin,</p>
+        <p>
+          A refund attempt has failed for a customer order. Please review the
+          details below:
+        </p>
+        <ul>
+          <li>
+            <strong>Customer Name:</strong>
+            <span th:text="${customerName}">John Doe</span>
+          </li>
+          <li>
+            <strong>Order ID:</strong> <span th:text="${orderId}">12345</span>
+          </li>
+          <li>
+            <strong>Refund Amount:</strong>
+            <span th:text="${refundAmount}">R100.00</span>
+          </li>
+          <li>
+            <strong>Failure Reason:</strong>
+            <span th:text="${refundReason}">Payment gateway error</span>
+          </li>
+        </ul>
+        <p>Please investigate the issue and take necessary action.</p>
+        <a href="#" class="button">View Order Details</a>
+      </div>
+      <div class="footer">
+        &copy; 2025 GreenPublic E-commerce. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

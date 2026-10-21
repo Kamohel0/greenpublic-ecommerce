@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Alert - GreenPublic</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        padding: 30px 20px;
+        text-align: center;
+        color: white;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      .content {
+        padding: 30px;
+      }
+      .alert-icon {
+        text-align: center;
+        font-size: 48px;
+        color: #e74c3c;
+        margin-bottom: 20px;
+      }
+      .info-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #e74c3c;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .info-item {
+        margin: 8px 0;
+        color: #666;
+      }
+      .info-item strong {
+        color: #333;
+      }
+      .action-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #e74c3c;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+        margin: 20px 0;
+      }
+      .footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        border-top: 1px solid #e9ecef;
+      }
+      .support-link {
+        color: #2ecc71;
+        text-decoration: none;
+      }
+      .support-link:hover {
+        text-decoration: underline;
+      }
+      .warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 20px 0;
+        color: #856404;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Security Alert</h1>
+      </div>
+
+      <div class="content">
+        <div class="alert-icon">⚠️</div>
+
+        <h2>Hello, <span th:text="${userName}">User</span>!</h2>
+        <p>
+          We detected suspicious activity on your GreenPublic account. For your
+          security, we've temporarily locked your account.
+        </p>
+
+        <div class="info-box">
+          <div class="info-item">
+            <strong>Time of incident:</strong>
+            <span th:text="${timestamp}">Timestamp</span>
+          </div>
+          <div class="info-item">
+            <strong>IP Address:</strong>
+            <span th:text="${ipAddress}">IP Address</span>
+          </div>
+          <div class="info-item">
+            <strong>Device:</strong>
+            <span th:text="${deviceInfo}">Device Info</span>
+          </div>
+        </div>
+
+        <div class="warning">
+          <strong>Important:</strong> Your account has been temporarily locked
+          for <span th:text="${lockoutMinutes}">20</span> minutes due to
+          multiple failed login attempts.
+        </div>
+
+        <p>
+          If this was you, you can try logging in again after the lockout period
+          ends.
+        </p>
+
+        <p>If this wasn't you, we recommend:</p>
+        <ul>
+          <li>Changing your password immediately after regaining access</li>
+          <li>Reviewing your account security settings</li>
+          <li>Enabling two-factor authentication if available</li>
+          <li>Contacting our support team if you have concerns</li>
+        </ul>
+
+        <div style="text-align: center">
+          <a th:href="${accountSettingsUrl}" class="action-button"
+            >Review Security Settings</a
+          >
+        </div>
+
+        <p>
+          Need immediate assistance? Contact our support team at
+          <a
+            th:href="'mailto:' + ${supportEmail}"
+            class="support-link"
+            th:text="${supportEmail}"
+            >support@greenpublic.com</a
+          >
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>&copy; 2024 GreenPublic. All rights reserved.</p>
+        <p>
+          This is an automated security alert. Please do not reply to this
+          email.
+        </p>
+        <p>GreenPublic - Protecting your account security</p>
+      </div>
+    </div>
+  </body>
+</html>

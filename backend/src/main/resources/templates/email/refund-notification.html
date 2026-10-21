@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Refund Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f6f6f6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eeeeee;
+      }
+      .content {
+        padding: 20px 0;
+        line-height: 1.6;
+        color: #333333;
+      }
+      .footer {
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+        font-size: 12px;
+        color: #777777;
+        text-align: center;
+      }
+      .highlight {
+        color: #2d8cf0;
+        font-weight: bold;
+      }
+      .button {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #2d8cf0;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Refund Processed</h2>
+      </div>
+      <div class="content">
+        <p>Hi <span th:text="${customerName}">Customer Name</span>,</p>
+        <p>
+          We wanted to let you know that your refund has been successfully
+          processed.
+        </p>
+        <ul>
+          <li>
+            <strong>Order ID:</strong> <span th:text="${orderId}">12345</span>
+          </li>
+          <li>
+            <strong>Refund Amount:</strong>
+            <span th:text="${refundAmount}">R100.00</span>
+          </li>
+          <li>
+            <strong>Reason:</strong>
+            <span th:text="${refundReason}">Customer requested refund</span>
+          </li>
+        </ul>
+        <p>
+          If you have any questions, please reply to this email or contact our
+          support team.
+        </p>
+        <a href="#" class="button">Visit Your Account</a>
+      </div>
+      <div class="footer">
+        &copy; 2025 GreenPublic E-commerce. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

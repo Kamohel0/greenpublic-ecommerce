@@ -1,0 +1,21 @@
+node_modules/
+dist/
+build/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Logs and runtime files
+logs/
+*.log
+*.pid
+
+# Backend build artifacts
+backend/target/
+backend/*.jar
+
+# Editor
+.idea/
